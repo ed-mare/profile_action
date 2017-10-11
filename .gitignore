@@ -13,3 +13,4 @@ spec/dummy/tmp/
 .tags*
 *.gem
 erl_crash.dump
+test.log

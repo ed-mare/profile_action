@@ -26,11 +26,23 @@ module ProfileAction
     # Defaults to Logger.new(STDOUT)
     attr_accessor :logger
 
+    # Defaults to :info
+    attr_accessor :log_level
+
+    # Pretty Json. Defaults to false.
+    attr_accessor :pretty_json
+
     def initialize
       @profile = true
       @min_percent = 0
       @print_json = false
+      @log_level = :info
+      @pretty_json = false
       @logger = Logger.new(STDOUT)
+    end
+
+    def json_output?
+      @print_json == true
     end
   end
 end

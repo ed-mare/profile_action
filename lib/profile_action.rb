@@ -1,10 +1,10 @@
 require 'ruby-prof'
-require 'ruby_prof-json'
 require 'logger'
+require 'json'
 
-require 'profile_action/engine'
+require 'profile_action/json_printer'
 require 'profile_action/configuration'
-require 'profile_action/controller/profile'
+require 'profile_action/profile'
 
 module ProfileAction
   class << self
