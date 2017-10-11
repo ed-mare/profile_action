@@ -1,0 +1,7 @@
+.git*
+doc/*
+spec/dummy/tmp/*
+spec/dummy/log/*
+.tags*
+*.gem
+erl_crash.dump

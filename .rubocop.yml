@@ -1,0 +1,13 @@
+AllCops:
+  Exclude:
+    - 'spec/test_app/*'
+    - spec/controllers/main_controller_spec.rb
+Metrics/LineLength:
+  Max: 120
+  Exclude:
+    - 'spec/**/*'
+Metrics/BlockLength:
+  CountComments: false
+  Exclude:
+    - 'spec/**/*'
+    - 'profile_action.gemspec'
