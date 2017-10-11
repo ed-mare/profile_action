@@ -1,6 +1,5 @@
 module ProfileAction
   module Profile
-
     def profile
       if config.profile == true
         method_result = nil
@@ -25,10 +24,10 @@ module ProfileAction
     end
 
     def stringify(result)
-      output = "#{caller_description.to_s}\n"
+      output = "#{caller_description}\n"
       RubyProf::FlatPrinter.new(result).print(
         output,
-         min_percent: config.min_percent
+        min_percent: config.min_percent
       )
       output
     end

@@ -1,5 +1,3 @@
-# encoding: utf-8
-
 # Bastardized RubyProf printer to print out JSON string.
 module ProfileAction
   class JsonPrinter < RubyProf::AbstractPrinter
@@ -11,7 +9,7 @@ module ProfileAction
     def print(output = STDOUT, options = {})
       super(output, options)
       if @output.is_a?(Hash)
-        @array << { 'profiled': @output }
+        @array << { 'profiled' => @output }
         @output = json
       else
         @output.puts json
@@ -36,13 +34,13 @@ module ProfileAction
 
     def print_header(thread)
       hash = {
-        'Measure Mode' => "%s" % RubyProf.measure_mode_string,
-        'Thread ID' => "%d" % thread.id,
-        'Total' => "%0.6f" % thread.total_time,
+        'Measure Mode' => format('%s', RubyProf.measure_mode_string),
+        'Thread ID' => format('%d', thread.id),
+        'Total' => format('%0.6f', thread.total_time),
         'Sort by' => sort_method
       }
-      hash['Fiber ID'] = "%d" % thread.fiber_id unless thread.id == thread.fiber_id
-      @array << {'header' => hash}
+      hash['Fiber ID'] = format('%d', thread.fiber_id) unless thread.id == thread.fiber_id
+      @array << { 'header' => hash }
     end
 
     def print_methods(thread)
@@ -58,17 +56,17 @@ module ProfileAction
         sum += method.self_time
 
         arr << {
-          '%self' => "%0.2f" % [method.self_time / total_time * 100],
-          'total' => "%0.3f" % [method.total_time],
-          'self' => "%0.3f" % [method.self_time],
-          'wait' => "%0.3f" % [method.wait_time],
-          'children_time' => "%0.3f" % [method.children_time],
-          'calls' => "%8d" % [method.called],
-          'cycle' => method.recursive? ? "*" : " ",
+          '%self' => format('%0.2f', method.self_time / total_time * 100),
+          'total' => format('%0.3f', method.total_time),
+          'self' => format('%0.3f', method.self_time),
+          'wait' => format('%0.3f', method.wait_time),
+          'children_time' => format('%0.3f', method.children_time),
+          'calls' => format('%8d', method.called),
+          'cycle' => method.recursive? ? '*' : ' ',
           'name' => method_name(method)
         }
       end
-      @array << {'methods' => arr} if arr.length > 0
+      @array << { 'methods' => arr } unless arr.empty?
     end
   end
 end

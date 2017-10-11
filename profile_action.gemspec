@@ -8,8 +8,10 @@ Gem::Specification.new do |s|
   s.version     = ProfileAction::VERSION
   s.authors     = ['ed.mare']
   s.homepage    = 'https://github.com/ed-mare/json_api_server'
-  s.summary     = 'Profile Rails actions with an around ruby-prof filter.'
-  s.description = 'Profile Rails actions with an around ruby-prof filter.'
+  s.summary     = 'Profile Rails actions with an around ruby-prof filter.' \
+      ' Prints FlatPrinter to log as text or optionally JSON.'
+  s.description = 'Profile Rails actions with an around ruby-prof filter.'  \
+      ' Prints FlatPrinter to log as text or optionally JSON.'
   s.license     = 'MIT'
 
   if s.respond_to?(:metadata)
