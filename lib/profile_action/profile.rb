@@ -1,13 +1,12 @@
 module ProfileAction
   module Profile
-
-    protected
+    private
 
     def profile
       if config.profile == true
         method_result = nil
         result = RubyProf.profile { method_result = yield }
-        caller = caller_locations(1, 1)[0].label
+        caller = respond_to?(:action_name) ? action_name : caller_locations.first.label
         config.logger.send(
           config.log_level,
           config.json_output? ? jsonify(result, caller) : stringify(result, caller)
