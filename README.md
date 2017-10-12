@@ -1,8 +1,8 @@
 # ProfileAction
 
 This gem profiles controller actions with [ruby-prof](https://github.com/ruby-prof/ruby-prof). It logs
-results to the app log. It prints results with the RubyProf::FlatPrinter which is
-succinct. Results can be output in JSON so it can be consumed by a log manager/analyzer like Splunk, etc.
+results to the app log. It prints results with the [RubyProf::FlatPrinter](https://github.com/ruby-prof/ruby-prof/blob/master/examples/flat.txt) which show the total amount of time spent in each method. Results can be 
+output in JSON so it can be consumed by a log manager/analyzer like Splunk, etc.
 
 Motivation: Profiling can be turned on/off on problematic actions in production by setting
 an environment variable. Results are logged to your app log so no extra steps are required
