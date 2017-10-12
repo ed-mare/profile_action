@@ -24,10 +24,13 @@ Gem::Specification.new do |s|
   s.files = Dir['{lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   s.required_ruby_version = '>= 2.1'
 
+  s.rdoc_options += ['--main', 'README.md', '--exclude', 'spec', '--exclude', 'bin', '--exclude', 'Dockerfile',
+                     '--exclude', 'Gemfile', '--exclude', 'Gemfile.lock', '--exclude', 'Rakefile']
+
   s.add_dependency 'ruby-prof', '~> 0.16'
 
-  s.add_development_dependency 'bundler', '>= 1.13'
-  s.add_development_dependency 'rake', '>= 10.0'
-  s.add_development_dependency 'rspec', '>= 3.0'
-  s.add_development_dependency 'rubocop', '>= 0.47'
+  s.add_development_dependency 'bundler', '~> 1.13'
+  s.add_development_dependency 'rake', '~> 10.0'
+  s.add_development_dependency 'rspec', '~> 3.0'
+  s.add_development_dependency 'rubocop', '~> 0.47'
 end

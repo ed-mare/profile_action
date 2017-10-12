@@ -6,7 +6,7 @@ require 'profile_action/json_printer'
 require 'profile_action/configuration'
 require 'profile_action/profile'
 
-module ProfileAction
+module ProfileAction # :nodoc:
   class << self
     attr_writer :configuration
   end
@@ -19,6 +19,7 @@ module ProfileAction
     yield configuration
   end
 
+  # Convenience method to logger.
   def self.logger
     ProfileAction.configuration.logger
   end

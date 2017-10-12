@@ -1,14 +1,14 @@
 # ProfileAction
 
-This gem profiles actions with [ruby-prof](https://github.com/ruby-prof/ruby-prof) and logs
-results to a specified log (intended for Rails log). It prints results with the RubyProf::FlatPrinter which is
-succinct. Results can be printed in JSON so it can be consumed by a log manager like Splunk, etc.
+This gem profiles controller actions with [ruby-prof](https://github.com/ruby-prof/ruby-prof). It logs
+results to the app log. It prints results with the RubyProf::FlatPrinter which is
+succinct. Results can be output in JSON so it can be consumed by a log manager/analyzer like Splunk, etc.
 
-Motivation: profiling can be turned on/off on a troublesome action in production by setting
-an environment variable. Results are logged to the Rails logger (if configured)
-so no extra steps are required to pipe it into your log manager.
+Motivation: Profiling can be turned on/off on problematic actions in production by setting
+an environment variable. Results are logged to your app log so no extra steps are required
+to pipe it into your log manager. The log manager can analyzed the data over time.
 
-**This is a WIP.**
+**This is a WIP.** Known to work with Rails 5.1.x and Ruby 2.3.x.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -22,12 +22,23 @@ And then execute:
 $ bundle
 ```
 
+If using Passenger docker image, this works:
+
+```shell
+# Dockerfile
+RUN git clone https://github.com/ed-mare/profile_action.git \
+    && cd profile_action \
+    && gem build profile_action.gemspec \
+    && gem install profile_action-0.1.0.gem
+```
+
 ## Usage
 
 ```ruby
 # 1) Configure the gem. In config/initializers/profile_action.rb
 ProfileAction.configure do |c|
-   # reduces the output to methods where %self is this percentage.
+
+   # Reduces output. Prints methods where %self is this percentage or more.
    c.min_percent = 2
 
    # Set to your rails logger. Defaults to  Logger.new(STDOUT).
@@ -36,13 +47,13 @@ ProfileAction.configure do |c|
    # By default it prints text. Set to true to log json.
    c.print_json = true
 
-   # By default log level is :info.
-   c.log_level = :debug
-
    # By default json is on one line. Set to true to pretty print json.
    c.pretty_json = true
 
-   # Can turn on based on environment variable.
+   # By default log level is :info.
+   c.log_level = :debug
+
+   # Can turn on/off based on environment variable.
    c.profile = ENV["PROFILE"] == '1'
  end
 
@@ -70,15 +81,75 @@ App 484 stdout:
 App 484 stdout: * indicates recursively called methods
 ```
 
-Json output looks like this:
+Json output looks like this. It is configurable to pretty print JSON. It defaults to one line.
 
 ```json
-[{"header":{"Measure Mode":"wall_time","Thread ID":"9299240","Total":"0.115787","Sort by":"self_time","Fiber ID":"30538500"}},{"methods":[{"%self":"7.74","total":"0.009","self":"0.009","wait":"0.000","children_time":"0.000","calls":"5","cycle":" ","name":"PG::Connection#async_exec"},{"%self":"4.94","total":"0.013","self":"0.006","wait":"0.000","children_time":"0.007","calls":"11","cycle":"*","name":"Kernel#require"},{"%self":"4.36","total":"0.006","self":"0.005","wait":"0.000","children_time":"0.001","calls":"149","cycle":" ","name":"Module#module_eval"},{"%self":"2.68","total":"0.003","self":"0.003","wait":"0.000","children_time":"0.000","calls":"558","cycle":" ","name":"Regexp#match"}]},{"profiled":{"class":"Api::V1::ItemsController","method":"index"}}]
+[
+  {
+    "header": {
+      "Measure Mode": "wall_time",
+      "Thread ID": "9299240",
+      "Total": "0.115787",
+      "Sort by": "self_time",
+      "Fiber ID": "30538500"
+    }
+  },
+  {
+    "methods": [
+      {
+        "%self": "7.74",
+        "total": "0.009",
+        "self": "0.009",
+        "wait": "0.000",
+        "children_time": "0.000",
+        "calls": "5",
+        "cycle": " ",
+        "name": "PG::Connection#async_exec"
+      },
+      {
+        "%self": "4.94",
+        "total": "0.013",
+        "self": "0.006",
+        "wait": "0.000",
+        "children_time": "0.007",
+        "calls": "11",
+        "cycle": "*",
+        "name": "Kernel#require"
+      },
+      {
+        "%self": "4.36",
+        "total": "0.006",
+        "self": "0.005",
+        "wait": "0.000",
+        "children_time": "0.001",
+        "calls": "149",
+        "cycle": " ",
+        "name": "Module#module_eval"
+      },
+      {
+        "%self": "2.68",
+        "total": "0.003",
+        "self": "0.003",
+        "wait": "0.000",
+        "children_time": "0.000",
+        "calls": "558",
+        "cycle": " ",
+        "name": "Regexp#match"
+      }
+    ]
+  },
+  {
+    "profiled": {
+      "class": "Api::V1::ItemsController",
+      "method": "index"
+    }
+  }
+]
 ```
 
 ## Development
 
-1) Build the docker image:
+1) Build the docker image. Re-build the image anytime gem specs are modified.
 
 ```shell
 docker-compose build
@@ -98,6 +169,9 @@ bundle console
 
 # run tests
 rspec
+
+# generate rdoc
+rdoc --main 'README.md' --exclude 'spec' --exclude 'bin' --exclude 'Gemfile' --exclude 'Dockerfile' --exclude 'Rakefile'
 ```
 
 ## Todo

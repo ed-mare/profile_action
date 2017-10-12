@@ -9,93 +9,87 @@ class TestClass
       (1..100).reduce { |sum, v| sum + v }
     end
   end
+
+  def method_b
+    result = profile do
+      (1..100).reduce { |sum, v| sum + v }
+    end
+    result + 1000
+  end
 end
 
 describe ProfileAction::Profile do
   describe '#profile' do
     let(:instance) { TestClass.new }
 
-    # after(:each) do
-    #   file = File.absolute_path('spec/fixtures/fred-oauth_token.pstore')
-    #   FileUtils.rm(file) if File.exist?(file)
-    # end
+    it 'returns the methods value (example #1)' do
+      expect(instance.method_a).to eq(5050)
+    end
 
-    context 'with default configs (STDOUT, text)' do
-      it 'returns the methods value' do
-        expect(instance.method_a).to eq(5050)
+    it 'returns the methods value (example #2)' do
+      expect(instance.method_b).to eq(6050)
+    end
+
+    context 'with stdout logger' do
+      context 'with text output' do
+        it 'writes FlatPrinter as text' do
+          expect { instance.method_a }.to output(/Sort by: self_time/).to_stdout_from_any_process
+          expect { instance.method_a }.to output(/Range#each/).to_stdout_from_any_process
+          expect { instance.method_a }.to output(/Enumerable#reduce/).to_stdout_from_any_process
+          expect { instance.method_a }.to output(/ProfileAction::Profile#profile/).to_stdout_from_any_process
+          expect { instance.method_a }.to output(/Class: TestClass, Method: method_a/).to_stdout_from_any_process
+        end
       end
 
-      it 'writes FlatPrinter as string to default logger (STDOUT)' do
-        instance.method_a
-        expect { instance.method_a }.to output(/Sort by: self_time/).to_stdout_from_any_process
-        expect { instance.method_a }.to output(/Range#each/).to_stdout_from_any_process
-        expect { instance.method_a }.to output(/Enumerable#reduce/).to_stdout_from_any_process
-        expect { instance.method_a }.to output(/ProfileAction::Profile#profile/).to_stdout_from_any_process
-        expect { instance.method_a }.to output(/Class: TestClass, Method: method_a/).to_stdout_from_any_process
+      context 'with json output' do
+        before(:all) { ProfileAction.configuration.print_json = true }
+        after(:all) {  ProfileAction.configuration.print_json = false }
+
+        it 'writes FlatPrinter as JSON' do
+          expect { instance.method_a }.to output(/"Sort by":"self_time"/).to_stdout_from_any_process
+          expect { instance.method_a }.to output(/"name":"Range#each"/).to_stdout_from_any_process
+          expect { instance.method_a }.to output(/"wait":"0.000"/).to_stdout_from_any_process
+          expect { instance.method_a }.to output(/{"class":"TestClass","method":"method_a"}/).to_stdout_from_any_process
+        end
       end
     end
 
-    context 'with print_json = true' do
+    context 'with file-based logger' do
+      def log_contents
+        IO.read(logger_file_path)
+      end
+
+      let(:logger_file_path) { File.absolute_path('spec/fixtures/test.log') }
       before(:each) do
-        ProfileAction.configuration.print_json = true
+        ProfileAction.configuration.logger = Logger.new(logger_file_path)
       end
-
       after(:each) do
-        ProfileAction.configuration.print_json = false
+        FileUtils.rm(logger_file_path) if File.exist?(logger_file_path)
       end
 
-      it 'returns the methods value' do
-        expect(instance.method_a).to eq(5050)
+      context 'with text output' do
+        it 'writes FlatPrinter as text' do
+          instance.method_a
+          contents = log_contents
+          expect(contents).to match(/1\s+Range#each/)
+          expect(contents).to match(/Enumerable#reduce/)
+          expect(contents).to match(/ProfileAction::Profile#profile/)
+          expect(contents).to match(/Class: TestClass, Method: method_a/)
+        end
       end
 
-      it 'writes FlatPrinter as JSON to default logger (STDOUT)' do
-        instance.method_a
-        expect { instance.method_a }.to output(/"Sort by":"self_time"/).to_stdout_from_any_process
-        expect { instance.method_a }.to output(/"name":"Range#each"/).to_stdout_from_any_process
-        expect { instance.method_a }.to output(/"wait":"0.000"/).to_stdout_from_any_process
-        expect { instance.method_a }.to output(/{"class":"TestClass","method":"method_a"}/).to_stdout_from_any_process
-      end
-    end
+      context 'with json output' do
+        before(:all) { ProfileAction.configuration.print_json = true }
+        after(:all) { ProfileAction.configuration.print_json = false }
 
-    context 'with file logger, printing JSON' do
-      before(:all) do
-        FileUtils.touch('test.log')
-        ProfileAction.configuration.logger = Logger.new('test.log')
-        ProfileAction.configuration.print_json = true
-      end
-      after(:all) do
-        ProfileAction.configuration.logger = Logger.new(STDOUT)
-        File.delete('test.log')
-        ProfileAction.configuration.print_json = false
-      end
-
-      it 'returns the methods value' do
-        expect(instance.method_a).to eq(5050)
-      end
-
-      it 'writes FlatPrinter as text to file logger' do
-        instance.method_a
-        expect(File.open('test.log').grep(/"Range#each"/).length).not_to eq(0)
-      end
-    end
-
-    context 'with file logger, printing text' do
-      before(:all) do
-        FileUtils.touch('test.log')
-        ProfileAction.configuration.logger = Logger.new('test.log')
-      end
-      after(:all) do
-        ProfileAction.configuration.logger = Logger.new(STDOUT)
-        File.delete('test.log')
-      end
-
-      it 'returns the methods value' do
-        expect(instance.method_a).to eq(5050)
-      end
-
-      it 'writes FlatPrinter as text to file logger' do
-        instance.method_a
-        expect(File.open('test.log').grep(/1\s+Range#each/).length).not_to eq(0)
+        it 'writes FlatPrinter as json' do
+          instance.method_a
+          contents = log_contents
+          expect(contents).to match(/"Sort by":"self_time"/)
+          expect(contents).to match(/"name":"Range#each"/)
+          expect(contents).to match(/"wait":"0.000"/)
+          expect(contents).to match(/{"class":"TestClass","method":"method_a"}/)
+        end
       end
     end
   end

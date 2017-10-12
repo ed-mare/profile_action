@@ -1,11 +1,13 @@
-# Bastardized RubyProf printer to print out JSON string.
-module ProfileAction
+module ProfileAction # :nodoc:
+  # Bastardized RubyProf printer. Prints out JSON string. Based on RubyProf::FlatPrinter
+  # https://github.com/ruby-prof/ruby-prof/blob/master/lib/ruby-prof/printers/flat_printer.rb.
   class JsonPrinter < RubyProf::AbstractPrinter
     def initialize(result)
       super(result)
       @array = []
     end
 
+    # If output is a hash, it appends it to the output and returns a string.
     def print(output = STDOUT, options = {})
       super(output, options)
       if @output.is_a?(Hash)

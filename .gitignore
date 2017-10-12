@@ -1,10 +1,7 @@
-.bundle/
-log/*.log
-pkg/
-spec/dummy/db/*.sqlite3
-spec/dummy/db/*.sqlite3-journal
-spec/dummy/log/*.log
-spec/dummy/tmp/
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
 /coverage/
 /doc/
 /pkg/
@@ -13,4 +10,3 @@ spec/dummy/tmp/
 .tags*
 *.gem
 erl_crash.dump
-test.log

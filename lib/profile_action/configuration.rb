@@ -1,4 +1,4 @@
-module ProfileAction
+module ProfileAction # :nodoc:
   # == Gem Configurations
   #
   # === Example:
@@ -20,13 +20,13 @@ module ProfileAction
     # to 0. https://github.com/ruby-prof/ruby-prof/blob/master/lib/ruby-prof/printers/abstract_printer.rb
     attr_accessor :min_percent
 
-    # true/false. Print out JSON. Defaults to false. Prints out text table.
+    # true/false. Prints out JSON. Defaults to false.
     attr_accessor :print_json
 
-    # Defaults to Logger.new(STDOUT)
+    # Defaults to Logger.new(STDOUT).
     attr_accessor :logger
 
-    # Defaults to :info
+    # Defaults to :info.
     attr_accessor :log_level
 
     # Pretty Json. Defaults to false.
