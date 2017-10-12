@@ -61,7 +61,7 @@ module ProfileAction
           'self' => format('%0.3f', method.self_time),
           'wait' => format('%0.3f', method.wait_time),
           'children_time' => format('%0.3f', method.children_time),
-          'calls' => format('%8d', method.called),
+          'calls' => method.called,
           'cycle' => method.recursive? ? '*' : ' ',
           'name' => method_name(method)
         }
