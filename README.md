@@ -64,6 +64,22 @@ ProfileAction.configure do |c|
  end
 ```
 
+ruby-prof defaults to Wall Time. [Other measurements](https://github.com/ruby-prof/ruby-prof) 
+can be configured:
+
+```shell
+# config/initializers/profile_action.rb
+
+# possible options
+RubyProf.measure_mode = RubyProf::WALL_TIME
+RubyProf.measure_mode = RubyProf::PROCESS_TIME
+RubyProf.measure_mode = RubyProf::CPU_TIME
+RubyProf.measure_mode = RubyProf::ALLOCATIONS
+RubyProf.measure_mode = RubyProf::MEMORY
+RubyProf.measure_mode = RubyProf::GC_TIME
+RubyProf.measure_mode = RubyProf::GC_RUNS
+```
+
 Text output looks like this. This is with  min_percent = 2.
 
 ```shell
