@@ -6,7 +6,7 @@ succinct. Results can be output in JSON so it can be consumed by a log manager/a
 
 Motivation: Profiling can be turned on/off on problematic actions in production by setting
 an environment variable. Results are logged to your app log so no extra steps are required
-to pipe it into your log manager. The log manager can analyzed the data over time.
+to pipe it into your log manager. The log manager can analyze the data over time.
 
 **This is a WIP.** Known to work with Rails 5.1.x and Ruby 2.3.x.
 
