@@ -1,12 +1,16 @@
 module ProfileAction
   module Profile
+
+    protected
+
     def profile
       if config.profile == true
         method_result = nil
         result = RubyProf.profile { method_result = yield }
+        caller = caller_locations(1, 1)[0].label
         config.logger.send(
           config.log_level,
-          config.json_output? ? jsonify(result) : stringify(result)
+          config.json_output? ? jsonify(result, caller) : stringify(result, caller)
         )
         method_result
       else
@@ -16,24 +20,20 @@ module ProfileAction
 
     protected
 
-    def jsonify(result)
+    def jsonify(result, caller)
       ProfileAction::JsonPrinter.new(result).print(
-        caller_description,
+        { 'class' => self.class, 'method' => caller },
         min_percent: config.min_percent
       )
     end
 
-    def stringify(result)
-      output = "#{caller_description}\n"
+    def stringify(result, caller)
+      output = "\nClass: #{self.class}, Method: #{caller}\n"
       RubyProf::FlatPrinter.new(result).print(
         output,
         min_percent: config.min_percent
       )
       output
-    end
-
-    def caller_description
-      { 'class' => self.class, 'caller' => caller_locations(1, 1)[0].label }
     end
 
     def config

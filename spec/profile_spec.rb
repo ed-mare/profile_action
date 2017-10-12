@@ -31,7 +31,7 @@ describe ProfileAction::Profile do
         expect { instance.method_a }.to output(/Range#each/).to_stdout_from_any_process
         expect { instance.method_a }.to output(/Enumerable#reduce/).to_stdout_from_any_process
         expect { instance.method_a }.to output(/ProfileAction::Profile#profile/).to_stdout_from_any_process
-        expect { instance.method_a }.to output(/{"class"=>TestClass, "caller"=>"stringify"}/).to_stdout_from_any_process
+        expect { instance.method_a }.to output(/Class: TestClass, Method: method_a/).to_stdout_from_any_process
       end
     end
 
@@ -53,6 +53,7 @@ describe ProfileAction::Profile do
         expect { instance.method_a }.to output(/"Sort by":"self_time"/).to_stdout_from_any_process
         expect { instance.method_a }.to output(/"name":"Range#each"/).to_stdout_from_any_process
         expect { instance.method_a }.to output(/"wait":"0.000"/).to_stdout_from_any_process
+        expect { instance.method_a }.to output(/{"class":"TestClass","method":"method_a"}/).to_stdout_from_any_process
       end
     end
 
