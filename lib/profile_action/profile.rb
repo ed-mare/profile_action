@@ -31,13 +31,24 @@ module ProfileAction # :nodoc:
     def profile
       if config.profile == true
         method_result = nil
-        result = RubyProf.profile { method_result = yield }
+        exception = nil
+        result = RubyProf.profile do
+          # RubyProf 0.16 swallows exceptions => https://github.com/ruby-prof/ruby-prof/issues/220
+          # so capture and re-raise. Disable rubocop rule; it's okay, Exception is re-raised.
+          # rubocop:disable RescueException
+          begin
+            method_result = yield
+          rescue Exception => ex
+            exception = ex
+          end
+          # rubocop:enable RescueException
+        end
         caller = respond_to?(:action_name) ? action_name : caller_locations(1..1).first.label
         config.logger.send(
           config.log_level,
           config.json_output? ? jsonify(result, caller) : stringify(result, caller)
         )
-        method_result
+        exception.nil? ? method_result : raise(exception)
       else
         yield
       end

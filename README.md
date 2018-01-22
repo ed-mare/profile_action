@@ -186,6 +186,9 @@ bundle console
 # run tests
 rspec
 
+# run rubocop
+rubocop
+
 # generate rdoc
 rdoc --main 'README.md' --exclude 'spec' --exclude 'bin' --exclude 'Gemfile' --exclude 'Dockerfile' --exclude 'Rakefile'
 ```

@@ -16,6 +16,13 @@ class TestClass
     end
     result + 1000
   end
+
+  def method_raises_error
+    result = profile do
+      1 / 0
+    end
+    result + 1000
+  end
 end
 
 describe ProfileAction::Profile do
@@ -28,6 +35,10 @@ describe ProfileAction::Profile do
 
     it 'returns the methods value (example #2)' do
       expect(instance.method_b).to eq(6050)
+    end
+
+    it 're-raises an exception if one occurrs (example #3)' do
+      expect { instance.method_raises_error }.to raise_exception(ZeroDivisionError)
     end
 
     context 'with stdout logger' do
