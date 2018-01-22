@@ -1,7 +1,7 @@
 # ProfileAction
 
 This gem profiles controller actions with [ruby-prof](https://github.com/ruby-prof/ruby-prof). It logs
-results to the app log. It prints results with the [RubyProf::FlatPrinter](https://github.com/ruby-prof/ruby-prof/blob/master/examples/flat.txt) which show the total amount of time spent in each method. Results can be 
+results to the app log. It prints results with the [RubyProf::FlatPrinter](https://github.com/ruby-prof/ruby-prof/blob/master/examples/flat.txt) which show the total amount of time spent in each method. Results can be
 output in JSON so it can be consumed by a log manager/analyzer like Splunk, etc.
 
 Motivation: Profiling can be turned on/off on problematic actions in production by setting
@@ -29,7 +29,7 @@ If using Passenger docker image, this works:
 RUN git clone https://github.com/ed-mare/profile_action.git \
     && cd profile_action \
     && gem build profile_action.gemspec \
-    && gem install profile_action-0.1.0.gem
+    && gem install profile_action-0.1.1.gem
 ```
 
 ## Usage
@@ -64,7 +64,7 @@ ProfileAction.configure do |c|
  end
 ```
 
-ruby-prof defaults to Wall Time. [Other measurements](https://github.com/ruby-prof/ruby-prof) 
+ruby-prof defaults to Wall Time. [Other measurements](https://github.com/ruby-prof/ruby-prof)
 can be configured:
 
 ```shell
