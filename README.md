@@ -29,7 +29,7 @@ If using Passenger docker image, this works:
 RUN git clone https://github.com/ed-mare/profile_action.git \
     && cd profile_action \
     && gem build profile_action.gemspec \
-    && gem install profile_action-0.1.1.gem
+    && gem install profile_action-0.1.2.gem
 ```
 
 ## Usage
