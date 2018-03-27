@@ -1,4 +1,4 @@
-lib = File.expand_path('../lib', __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'profile_action/version'
 
@@ -29,8 +29,9 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'ruby-prof', '~> 0.16'
 
-  s.add_development_dependency 'bundler', '~> 1.13'
+  s.add_development_dependency 'bundle-audit', '~> 0.1'
+  s.add_development_dependency 'bundler', '~> 1.1'
   s.add_development_dependency 'rake', '~> 10.0'
   s.add_development_dependency 'rspec', '~> 3.0'
-  s.add_development_dependency 'rubocop', '~> 0.49'
+  s.add_development_dependency 'rubocop', '~> 0.4'
 end
